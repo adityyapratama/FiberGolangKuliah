@@ -15,7 +15,7 @@ func NewPekerjaanAlumniRepository(db *sql.DB) *PekerjaanAlumniRepository{
 
 }
 
-// CreatePekerjaan menyimpan data pekerjaan baru ke database.
+
 func (r *PekerjaanAlumniRepository) CreatePekerjaan(req model.CreatePekerjaanRequest, tglMulai time.Time, tglSelesai *time.Time) (*model.Pekerjaan, error) {
 	var id int
 	query := `INSERT INTO pekerjaan_alumni (alumni_id, nama_perusahaan, posisi_jabatan, bidang_industri, lokasi_kerja, gaji_range, tanggal_mulai_kerja, tanggal_selesai_kerja, status_pekerjaan, deskripsi_pekerjaan, created_at, updated_at)
@@ -27,7 +27,7 @@ func (r *PekerjaanAlumniRepository) CreatePekerjaan(req model.CreatePekerjaanReq
 	return r.GetPekerjaanByID(id)
 }
 
-// GetPekerjaanByID mengambil satu data pekerjaan berdasarkan ID pekerjaan.
+
 func (r *PekerjaanAlumniRepository) GetPekerjaanByID(id int) (*model.Pekerjaan, error) {
 	var p model.Pekerjaan
 	query := `SELECT id, alumni_id, nama_perusahaan, posisi_jabatan, bidang_industri, lokasi_kerja, gaji_range, tanggal_mulai_kerja, tanggal_selesai_kerja, status_pekerjaan, deskripsi_pekerjaan, created_at, updated_at 
@@ -39,7 +39,7 @@ func (r *PekerjaanAlumniRepository) GetPekerjaanByID(id int) (*model.Pekerjaan, 
 	return &p, nil
 }
 
-// GetAllPekerjaanByAlumniID mengambil semua riwayat pekerjaan dari satu alumni.
+
 func (r *PekerjaanAlumniRepository) GetAllPekerjaanByAlumniID(alumniID int) ([]model.Pekerjaan, error) {
 	var pekerjaanList []model.Pekerjaan
 	query := `SELECT id, alumni_id, nama_perusahaan, posisi_jabatan, bidang_industri, lokasi_kerja, gaji_range, tanggal_mulai_kerja, tanggal_selesai_kerja, status_pekerjaan, deskripsi_pekerjaan, created_at, updated_at 
@@ -59,7 +59,7 @@ func (r *PekerjaanAlumniRepository) GetAllPekerjaanByAlumniID(alumniID int) ([]m
 	return pekerjaanList, nil
 }
 
-// UpdatePekerjaan memperbarui data pekerjaan di database.
+
 func (r *PekerjaanAlumniRepository) UpdatePekerjaan(id int, req model.UpdatePekerjaanRequest, tglMulai time.Time, tglSelesai *time.Time) (*model.Pekerjaan, error) {
 	query := `UPDATE pekerjaan_alumni SET 
 				nama_perusahaan=$1, posisi_jabatan=$2, bidang_industri=$3, lokasi_kerja=$4, gaji_range=$5, 
@@ -76,7 +76,7 @@ func (r *PekerjaanAlumniRepository) UpdatePekerjaan(id int, req model.UpdatePeke
 	return r.GetPekerjaanByID(id)
 }
 
-// DeletePekerjaan menghapus data pekerjaan dari database.
+
 func (r *PekerjaanAlumniRepository) DeletePekerjaan(id int) error {
 	result, err := r.DB.Exec("DELETE FROM pekerjaan_alumni WHERE id = $1", id)
 	if err != nil {
@@ -92,7 +92,7 @@ func (r *PekerjaanAlumniRepository) DeletePekerjaan(id int) error {
 
 
 
-// GetAllPekerjaan mengambil semua data pekerjaan dari database.
+
 func (r *PekerjaanAlumniRepository) GetAllPekerjaan() ([]model.Pekerjaan, error) {
 	var pekerjaanList []model.Pekerjaan
 	query := `SELECT id, alumni_id, nama_perusahaan, posisi_jabatan, bidang_industri, lokasi_kerja, gaji_range, tanggal_mulai_kerja, tanggal_selesai_kerja, status_pekerjaan, deskripsi_pekerjaan, created_at, updated_at 

@@ -2,22 +2,22 @@ package route
 
 import (
 	"fiber-golang-kuliah/app/handler"
+	"fiber-golang-kuliah/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupPekerjaanAlumniRoutes(app *fiber.App, h *handler.PekerjaanHandler) {
-	api := app.Group("/api")
 
-	pekerjaan := api.Group("/pekerjaan")
+func SetupPekerjaanRoutes(app fiber.Router, pekerjaanHandler *handler.PekerjaanHandler) {
+	pekerjaan := app.Group("/pekerjaan")
 
-	pekerjaan.Get("/", h.GetAllPekerjaansajaHandler)
-	// Path diubah menjadi "/alumni/:alumni_id" agar sesuai dengan handler-nya.
-	pekerjaan.Get("/alumni/:alumni_id", h.GetAllPekerjaanByAlumniIDHandler)
+	
+	pekerjaan.Get("/", pekerjaanHandler.GetAllPekerjaansajaHandler)
+	pekerjaan.Get("/:id", pekerjaanHandler.GetPekerjaanByIDHandler)
+	pekerjaan.Get("/alumni/:alumni_id", pekerjaanHandler.GetAllPekerjaanByAlumniIDHandler)
 
-	pekerjaan.Post("/", h.CreatePekerjaanHandler)
-	pekerjaan.Get("/:id", h.GetPekerjaanByIDHandler)
-	pekerjaan.Get("/:id", h.GetPekerjaanByIDsajaHandler)
-	pekerjaan.Put("/:id", h.UpdatePekerjaanHandler)
-	pekerjaan.Delete("/:id", h.DeletePekerjaanHandler)
+	
+	pekerjaan.Post("/", middleware.AdminOnly(), pekerjaanHandler.CreatePekerjaanHandler)
+	pekerjaan.Put("/:id", middleware.AdminOnly(), pekerjaanHandler.UpdatePekerjaanHandler)
+	pekerjaan.Delete("/:id", middleware.AdminOnly(), pekerjaanHandler.DeletePekerjaanHandler)
 }

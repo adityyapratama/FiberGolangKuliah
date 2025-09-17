@@ -7,13 +7,13 @@ import (
 	"time"
 )
 
-// PekerjaanAlumniService memegang dependensi ke dua repository.
+
 type PekerjaanAlumniService struct {
 	AlumniRepo    *repository.AlumniRepository
 	PekerjaanRepo *repository.PekerjaanAlumniRepository
 }
 
-// NewPekerjaanAlumniService adalah constructor untuk membuat instance service baru.
+
 func NewPekerjaanAlumniService(
 	alumniRepo *repository.AlumniRepository,
 	pekerjaanRepo *repository.PekerjaanAlumniRepository,
@@ -24,7 +24,7 @@ func NewPekerjaanAlumniService(
 	}
 }
 
-// parseTanggal adalah fungsi helper internal.
+
 func parseTanggal(tanggalStr string) (time.Time, error) {
 	return time.Parse("2006-01-02", tanggalStr)
 }

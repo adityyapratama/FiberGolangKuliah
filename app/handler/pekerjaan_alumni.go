@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// PekerjaanHandler memegang dependensi ke service-nya.
+
 type PekerjaanHandler struct {
 	Svc *service.PekerjaanAlumniService
 }

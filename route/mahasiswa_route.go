@@ -2,19 +2,22 @@ package route
 
 import (
 	"fiber-golang-kuliah/app/handler"
+	"fiber-golang-kuliah/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupMahasiswaRoutes(app *fiber.App, h *handler.MahasiswaHandler){
-	api := app.Group("/api")
 
-	mahasiswa := api.Group("/mahasiswa")
+func SetupMahasiswaRoutes(protected fiber.Router, h *handler.MahasiswaHandler) {
+	
+	mahasiswa := protected.Group("/mahasiswa")
 
+	
 	mahasiswa.Get("/", h.GetAllMahasiswaHandler)
 	mahasiswa.Get("/:id", h.GetMahasiswaByIDHandler)
-	mahasiswa.Post("/", h.CreateMahasiswaHandler)
-	mahasiswa.Put("/:id", h.UpdateMahasiswaHandler)
-	mahasiswa.Delete("/:id", h.DeleteMahasiswaHandler)
 
+	
+	mahasiswa.Post("/", middleware.AdminOnly(), h.CreateMahasiswaHandler)
+	mahasiswa.Put("/:id", middleware.AdminOnly(), h.UpdateMahasiswaHandler)
+	mahasiswa.Delete("/:id", middleware.AdminOnly(), h.DeleteMahasiswaHandler)
 }
