@@ -102,11 +102,21 @@ func (h *PekerjaanHandler) GetPekerjaanByIDsajaHandler(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"data": pekerjaan})
 }
 
-// BARU: GetAllPekerjaanHandler menangani request untuk mendapatkan semua data pekerjaan.
+//GetAllPekerjaanHandler menangani request untuk mendapatkan semua data pekerjaan.
 func (h *PekerjaanHandler) GetAllPekerjaansajaHandler(c *fiber.Ctx) error {
 	pekerjaanList, err := h.Svc.GetAllPekerjaansajaService()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.JSON(fiber.Map{"data": pekerjaanList})
+}
+
+func( h *PekerjaanHandler) GetAllPekerjaanAlumniHandlerSorting(c *fiber.Ctx) error{
+	response, err :=h.Svc.GetAllPekerjaanAlumniServiceSorting(c)
+	if err!= nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error" : err.Error(),
+		})
+	}
+	return c.JSON(response)
 }

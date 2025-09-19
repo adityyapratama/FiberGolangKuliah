@@ -13,10 +13,11 @@ func SetupPekerjaanRoutes(app fiber.Router, pekerjaanHandler *handler.PekerjaanH
 
 	
 	pekerjaan.Get("/", pekerjaanHandler.GetAllPekerjaansajaHandler)
-	pekerjaan.Get("/:id", pekerjaanHandler.GetPekerjaanByIDHandler)
-	pekerjaan.Get("/alumni/:alumni_id", pekerjaanHandler.GetAllPekerjaanByAlumniIDHandler)
+	pekerjaan.Get("/search", pekerjaanHandler.GetAllPekerjaanAlumniHandlerSorting)
 
-	
+	pekerjaan.Get("/:id", pekerjaanHandler.GetPekerjaanByIDHandler)
+
+	pekerjaan.Get("/alumni/:alumni_id", middleware.AdminOnly(),pekerjaanHandler.GetAllPekerjaanByAlumniIDHandler)
 	pekerjaan.Post("/", middleware.AdminOnly(), pekerjaanHandler.CreatePekerjaanHandler)
 	pekerjaan.Put("/:id", middleware.AdminOnly(), pekerjaanHandler.UpdatePekerjaanHandler)
 	pekerjaan.Delete("/:id", middleware.AdminOnly(), pekerjaanHandler.DeletePekerjaanHandler)

@@ -100,3 +100,14 @@ func(h *AlumniHandler ) DeleteAlumniHandler(c *fiber.Ctx) error{
 
 	return c.JSON(fiber.Map{"message" : "Alumni  berhasil di hapus"})
 }
+
+
+func (h *AlumniHandler) GetAllAlumniHandlerSorting(c *fiber.Ctx) error {
+	response, err := h.Svc.GetAllAlumniServiceSorting(c) // Panggil service yang sesuai
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+	return c.JSON(response)
+}

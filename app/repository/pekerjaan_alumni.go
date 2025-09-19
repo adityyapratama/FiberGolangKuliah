@@ -3,6 +3,8 @@ package repository
 import (
 	"database/sql"
 	"fiber-golang-kuliah/app/model"
+	"fmt"
+	"log"
 	"time"
 )
 
@@ -110,4 +112,46 @@ func (r *PekerjaanAlumniRepository) GetAllPekerjaan() ([]model.Pekerjaan, error)
 		pekerjaanList = append(pekerjaanList, p)
 	}
 	return pekerjaanList, nil
+}
+
+
+
+func (r *PekerjaanAlumniRepository) CountPekerjaan(search string) (int, error) {
+    var total int
+    query := `SELECT COUNT(id) FROM pekerjaan_alumni WHERE nama_perusahaan ILIKE $1 OR posisi_jabatan ILIKE $1`
+    // Tambahkan tanda '&' sebelum variabel 'total'
+    err := r.DB.QueryRow(query, "%"+search+"%").Scan(&total)
+    return total, err
+}
+
+func (r *PekerjaanAlumniRepository) GetAllPekerjaanRepo(search, sortBy, order string, limit, offset int) ([]model.Pekerjaan, error) {
+	var pekerjaanlist []model.Pekerjaan
+	log.Printf("Repository: Menerima parameter search = '%s'", search)
+	query := fmt.Sprintf(`
+		SELECT id, alumni_id,nama_perusahaan,posisi_jabatan,bidang_industri,lokasi_kerja,gaji_range,tanggal_mulai_kerja,tanggal_selesai_kerja, status_pekerjaan, deskripsi_pekerjaan,created_at,updated_at 
+		FROM pekerjaan_alumni
+		WHERE nama_perusahaan ILIKE $1 OR posisi_jabatan ILIKE $1
+		ORDER BY %s %s
+		LIMIT $2 OFFSET $3
+		`, sortBy, order)
+	
+	rows, err := r.DB.Query(query, "%"+search+"%", limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var p model.Pekerjaan
+		
+		if err := rows.Scan(
+			&p.ID, &p.AlumniID, &p.NamaPerusahaan, &p.PosisiJabatan, &p.BidangIndustri, 
+			&p.LokasiKerja, &p.GajiRange, &p.TanggalMulaiKerja, &p.TanggalSelesaiKerja, 
+			&p.StatusPekerjaan, &p.DeskripsiPekerjaan, &p.CreatedAt, &p.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		pekerjaanlist = append(pekerjaanlist, p)
+	}
+	return pekerjaanlist, nil
 }

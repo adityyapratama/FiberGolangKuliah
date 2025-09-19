@@ -4,7 +4,12 @@ import (
 	"errors"
 	"fiber-golang-kuliah/app/model"
 	"fiber-golang-kuliah/app/repository"
+	
+	"strconv"
+	"strings"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 
@@ -101,4 +106,52 @@ func (s *PekerjaanAlumniService) GetPekerjaansajaByIDService(id int) (*model.Pek
 
 func (s *PekerjaanAlumniService) GetAllPekerjaansajaService() ([]model.Pekerjaan, error) {
 	return s.PekerjaanRepo.GetAllPekerjaan()
+}
+
+
+func (s *PekerjaanAlumniService) GetAllPekerjaanAlumniServiceSorting(c *fiber.Ctx) (*model.PekerjaanResponse, error) {
+    // mengambil query parameter dari URL
+    page, _ := strconv.Atoi(c.Query("page", "1"))
+    limit, _ := strconv.Atoi(c.Query("limit", "10"))
+    sortBy := c.Query("sortBy", "id")
+    order := c.Query("order", "asc")
+    search := c.Query("search", "")
+
+
+    
+    sortByWhitelist := map[string]bool{"id": true, "nama_perusahaan": true, "posisi_jabatan": true, "lokasi_kerja": true}
+    if !sortByWhitelist[sortBy] {
+        sortBy = "id" 
+    }
+    if strings.ToLower(order) != "desc" {
+        order = "asc"
+    }
+
+    
+    offset := (page - 1) * limit
+
+    
+    alumni, err := s.PekerjaanRepo.GetAllPekerjaanRepo(search, sortBy, order, limit, offset)
+    if err != nil {
+        return nil, err
+    }
+    total, err := s.PekerjaanRepo.CountPekerjaan(search)
+    if err != nil {
+        return nil, err
+    }
+
+    
+    response := &model.PekerjaanResponse{
+        Data: alumni,
+        Meta: model.MetaInfo{
+            Page:   page,
+            Limit:  limit,
+            Total:  total,
+            Pages:  (total + limit - 1) / limit, // Kalkulasi total halaman
+            SortBy: sortBy,
+            Order:  order,
+            Search: search,
+        },
+    }
+    return response, nil
 }

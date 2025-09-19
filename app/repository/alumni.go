@@ -3,6 +3,8 @@ package repository
 import (
 	"database/sql"
 	"fiber-golang-kuliah/app/model"
+	"fmt"
+	"log"
 	"time"
 )
 
@@ -128,3 +130,44 @@ func ( r *AlumniRepository) DeleteAlumni(id int) error{
 	return  nil
 } 
 
+
+
+func (r *AlumniRepository) CountAlumni(search string) (int, error) {
+    var total int
+    query := `SELECT COUNT(id) FROM alumni WHERE nama ILIKE $1 OR jurusan ILIKE $1`
+    // Tambahkan tanda '&' sebelum variabel 'total'
+    err := r.DB.QueryRow(query, "%"+search+"%").Scan(&total)
+    return total, err
+}
+
+// hitung jumlah data
+func (r *AlumniRepository) GetAllAlumni(search, sortBy, order string, limit, offset int) ([]model.Alumni, error) {
+	var alumniList []model.Alumni
+	log.Printf("Repository: Menerima parameter search = '%s'", search)
+	query := fmt.Sprintf(`
+		SELECT id, nim, nama, jurusan, angkatan, tahun_lulus, email, no_telepon, alamat, created_at, updated_at 
+		FROM alumni
+		WHERE nama ILIKE $1 OR jurusan ILIKE $1
+		ORDER BY %s %s
+		LIMIT $2 OFFSET $3
+		`, sortBy, order)
+	
+	rows, err := r.DB.Query(query, "%"+search+"%", limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var a model.Alumni
+		// Tambahkan &a.NoTelepon dan &a.Alamat
+		if err := rows.Scan(
+			&a.ID, &a.NIM, &a.Nama, &a.Jurusan, &a.Angkatan, &a.TahunLulus,
+			&a.Email, &a.NoTelepon, &a.Alamat, &a.CreatedAt, &a.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		alumniList = append(alumniList, a)
+	}
+	return alumniList, nil
+}
