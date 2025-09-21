@@ -135,7 +135,7 @@ func ( r *AlumniRepository) DeleteAlumni(id int) error{
 func (r *AlumniRepository) CountAlumni(search string) (int, error) {
     var total int
     query := `SELECT COUNT(id) FROM alumni WHERE nama ILIKE $1 OR jurusan ILIKE $1`
-    // Tambahkan tanda '&' sebelum variabel 'total'
+    
     err := r.DB.QueryRow(query, "%"+search+"%").Scan(&total)
     return total, err
 }

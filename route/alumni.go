@@ -13,8 +13,9 @@ func SetupAlumniRoutes(protected fiber.Router, alumniHandler *handler.AlumniHand
 
 	
 	alumni.Get("/", alumniHandler.GetAllAlumniHandler)
-	alumni.Get("/search", alumniHandler.GetAllAlumniHandlerSorting) 
 	alumni.Get("/:id", alumniHandler.GetAlumniByIDHandler)
+
+	alumni.Get("/search", alumniHandler.GetAllAlumniHandlerSorting) 
 
 	
 	alumni.Post("/", middleware.AdminOnly(), alumniHandler.CreateAlumniHandler)

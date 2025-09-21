@@ -119,7 +119,6 @@ func (r *PekerjaanAlumniRepository) GetAllPekerjaan() ([]model.Pekerjaan, error)
 func (r *PekerjaanAlumniRepository) CountPekerjaan(search string) (int, error) {
     var total int
     query := `SELECT COUNT(id) FROM pekerjaan_alumni WHERE nama_perusahaan ILIKE $1 OR posisi_jabatan ILIKE $1`
-    // Tambahkan tanda '&' sebelum variabel 'total'
     err := r.DB.QueryRow(query, "%"+search+"%").Scan(&total)
     return total, err
 }

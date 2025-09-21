@@ -103,7 +103,7 @@ func(h *AlumniHandler ) DeleteAlumniHandler(c *fiber.Ctx) error{
 
 
 func (h *AlumniHandler) GetAllAlumniHandlerSorting(c *fiber.Ctx) error {
-	response, err := h.Svc.GetAllAlumniServiceSorting(c) // Panggil service yang sesuai
+	response, err := h.Svc.GetAllAlumniServiceSorting(c) 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),

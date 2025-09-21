@@ -7,6 +7,6 @@ Kombinasi: GET /alumni/search?page=1&limit=10&sortBy=angkatan&order=desc&search=
 
 
 Pagination: GET /pekerjaan/search?page=1&limit=5
-Search: GET /pekerjaan/search?search=google
+Search: GET /pekerjaan/search?search=manager
 Sorting: GET /pekerjaan/search?sortBy=nama_perusahaan&order=desc
-Kombinasi: GET /pekerjaan/search?page=1&limit=10&sortBy=posisi_jabatan&order=asc&search=developer
+Kombinasi: GET /pekerjaan/search?page=1&limit=10&sortBy=posisi_jabatan&order=asc&search=manager
